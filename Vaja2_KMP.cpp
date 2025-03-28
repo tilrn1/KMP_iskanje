@@ -24,6 +24,20 @@ void izpis_KMPnext(const int* polje, int len) {
 	out << endl;
 }
 
+void sunday(const string& text, const string& vzorec){
+	int m = vzorec.size();
+	int n = text.size();
+	int BCH[256];
+
+	for (int i = 0; i < 256; i++) {
+        BCH[i] = m + 1;
+    }
+	
+	for(int i = 0; i < m; i++){
+		BCH[vzorec[i]] = m - i;
+	}
+}
+
 void KMP(const string& text, const string& vzorec) {
 	/*
 	 * implementacija algoritma KMP 
@@ -87,7 +101,7 @@ int main(int argc, const char *const argv[]) {
 		KMP(text, vzorec);
 	}
 	else {
-		//Sunday
+		sunday(text, vzorec);
 	}
 
 	
