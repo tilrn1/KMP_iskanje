@@ -31,44 +31,43 @@ void KMP(const string& text, const string& vzorec) {
 	 * Za izpis navidezne spremenljivke index uporabite: out << index << ' ';
 	 */
 	int n = text.size();
- 	int m = vzorec.size();
- 
- 	int* KMPnext = new int[m]();
- 	KMPnext[0] = -1;
- 	int j = -1;//afafafaafas
- 
- 	for (int i = 2; i < m; i++) {
- 		while (j >= 0 && vzorec[j] != vzorec[i - 1]) {
- 			j = KMPnext[j]; 
- 		}
- 		j++;
- 		KMPnext[i] = j;
- 	}
- 	izpis_KMPnext(KMPnext,m);
- 
- 	int j1 = 0; 
- 	int i = 0; 
- 
- 	while (j1 + i < n) {
- 		if (vzorec[i] == text[j1 + i]) {
- 			i++;
- 			if (i == m) {
- 				out << j1 << ' '; 
- 				j1 += m - KMPnext[m - 1]; 
- 				i = 0;
- 			}
- 		}
- 		else {
- 			if (KMPnext[i] >= 0) {
- 				j = j1 + i - KMPnext[i]; 
- 				i = KMPnext[i];
- 			}
- 			else {
- 				j1++;
- 				i = 0;
- 			}
- 		}
- 	}
+	int m = vzorec.size();
+
+	int* KMPnext = new int[m]();
+	KMPnext[0] = -1;
+	int j = -1;
+
+	for (int i = 1; i < m; i++) {
+		while (j >= 0 && vzorec[i - 1] != vzorec[j]) {
+			j = KMPnext[j];
+		}
+		
+		j++;
+		KMPnext[i] = j;
+	}
+	izpis_KMPnext(KMPnext, m);
+
+
+	j = 0;
+	int i = 0;
+	while (j + i < n) {
+		if (text[j + i] == vzorec[i]) {
+			i++;
+			if (i == m) {
+				out << j << ' ';
+				j += m;
+				i = 0;
+			}
+		} else {
+			if (i > 0) {
+				j += (i - KMPnext[i]);
+				i = 0;
+			} else {
+				j++;
+			}
+		}
+	}
+	out << endl;
 }
 
 int main(int argc, const char *const argv[]) {
