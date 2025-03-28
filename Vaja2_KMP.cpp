@@ -30,6 +30,45 @@ void KMP(const string& text, const string& vzorec) {
 	 * za izpis polja KMPnext lahko uporabite funkcijo izpis_KMPnext
 	 * Za izpis navidezne spremenljivke index uporabite: out << index << ' ';
 	 */
+	int n = text.size();
+ 	int m = vzorec.size();
+ 
+ 	int* KMPnext = new int[m]();
+ 	KMPnext[0] = -1;
+ 	int j = -1;//afafafaafas
+ 
+ 	for (int i = 2; i < m; i++) {
+ 		while (j >= 0 && vzorec[j] != vzorec[i - 1]) {
+ 			j = KMPnext[j]; 
+ 		}
+ 		j++;
+ 		KMPnext[i] = j;
+ 	}
+ 	izpis_KMPnext(KMPnext,m);
+ 
+ 	int j1 = 0; 
+ 	int i = 0; 
+ 
+ 	while (j1 + i < n) {
+ 		if (vzorec[i] == text[j1 + i]) {
+ 			i++;
+ 			if (i == m) {
+ 				out << j1 << ' '; 
+ 				j1 += m - KMPnext[m - 1]; 
+ 				i = 0;
+ 			}
+ 		}
+ 		else {
+ 			if (KMPnext[i] >= 0) {
+ 				j = j1 + i - KMPnext[i]; 
+ 				i = KMPnext[i];
+ 			}
+ 			else {
+ 				j1++;
+ 				i = 0;
+ 			}
+ 		}
+ 	}
 }
 
 int main(int argc, const char *const argv[]) {
