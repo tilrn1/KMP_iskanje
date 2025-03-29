@@ -4,6 +4,7 @@
         "*.sqlbook": "sql",
         "*.ndjson": "jsonl",
         "*.dbclient-js": "javascript",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "vector": "cpp"
     }
 }

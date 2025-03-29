@@ -1,6 +1,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <vector>
 using namespace std;
 
 ofstream out;
@@ -27,15 +28,31 @@ void izpis_KMPnext(const int* polje, int len) {
 void sunday(const string& text, const string& vzorec){
 	int m = vzorec.size();
 	int n = text.size();
-	int BCH[256];
+	vector<unsigned int> BCH(256, m+1);
 
-	for (int i = 0; i < 256; i++) {
-        BCH[i] = m + 1;
-    }
-	
 	for(int i = 0; i < m; i++){
 		BCH[vzorec[i]] = m - i;
 	}
+
+	int j = 0;
+    while (j + m <= n) {
+        int i = 0;
+        while (i < m && vzorec[i] == text[j + i]) {
+            i++;
+        }
+
+        if (i == m) {
+            out << j << ' ';
+        }
+
+        if (vzorec[i] != text[j+i]) {
+            j += BCH[text[j + m]];
+			i = 0;
+        } else {
+            break;
+        }
+    }
+    out << endl;
 }
 
 void KMP(const string& text, const string& vzorec) {
