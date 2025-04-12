@@ -1,6 +1,6 @@
 #!/bin/bash
 
-output=$(./KMP 0 "Lorem ipsum" tests/test_input.txt)
+output=$(./Vaja2.exe 0 "Lorem ipsum" tests/test_input.txt)
 
 diff -w out.txt tests/test_expected.txt
 
