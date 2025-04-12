@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4  # Klonira repozitorij
 
-        - name: Preveri Docker secrets
+      - name: Preveri Docker secrets
         run: |
           echo "DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}"
           echo "DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}"
