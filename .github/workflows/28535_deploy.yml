@@ -1,15 +1,16 @@
 name: Na DockerHub
 
+
 on:
-  push:
-    branches:
-      - main # Se sproži ob vsakem pushu na vejo 'main'
+  workflow_run: # Triggered by another workflow
+    workflows: ["Testiranje aplikacije"] # workflow to trigger tega
+    types:
+      - completed
 
 jobs:
   deploy:
     name: Deploy aplikacije
     runs-on: self-hosted
-    needs: [izvedi_skripte]
 
     strategy:
       matrix:
