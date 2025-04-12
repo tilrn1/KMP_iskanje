@@ -4,30 +4,27 @@ on:
   push:
     branches:
       - main # Se sproži ob vsakem pushu na vejo 'main'
+
 jobs:
   deploy:
     name: Deploy aplikacije
-    runs-on: self-hosted # Uporabi lokalno gostiteljsko okolje
-    needs: [izvedi_skripte] # Ta se izvede šele, ko se drugi uspešno zaključi
+    runs-on: self-hosted
+    needs: [izvedi_skripte]
 
     strategy:
       matrix:
-        os: [ubuntu-latest]  # Uporabi najnovejšo različico Ubuntu-ja kot virtualno okolje
-        version: [latest]  # Uporabi najnovejšo različico Dockerja
-    
+        os: [ubuntu-latest]
+        version: [latest]
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v4 # Potegne kodo iz repozitorija
+        uses: actions/checkout@v4
 
       - name: Login na DockerHub
-        run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}| docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin # Prijava na DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest . # Ustvari Docker sliko
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest .
 
       - name: Push na DockerHub
-        run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest # Potisni Docker sliko na DockerHub
->>>>>>> 8d40206380aecb8057234ae658fde7a8747176bb
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest

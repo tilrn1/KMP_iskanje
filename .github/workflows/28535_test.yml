@@ -1,61 +1,58 @@
-name: Testiranje projekta  # Ime ki se bo prikazovalo v GitHub Actions
+name: Testiranje projekta
+
 on:
   push:
-    branches: 
-      - main  #se sproži ob vsakem pushu na vejo 'main' 
+    branches:
+      - main
 
 jobs:
-  preveri_skripte:  #preveri datoteke obstajajo
+  preveri_skripte:
     name: Preveri skripte
-    runs-on: ubuntu-latest #Uporabi najnovejšo različico Ubuntu-ja kot virtualno okolje 
-        
-    steps:
-      -name: Checkout
-      uses: actions/checkout@v4 # Potegne kodo iz repozitorija 
-      
-      -name: Preveri skripte
-      run: |  # Začni z Bash skripto, Preveri ali obstajajo potrebne datoteke
-          touch napaka.txt  # Ustvari prazno datoteko #
+    runs-on: ubuntu-latest
 
-          if [ ! -f tests/test.sh ]; then                                     
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Preveri skripte
+        run: |
+          touch napaka.txt
+          if [ ! -f tests/test.sh ]; then
             echo "Napaka: Testna skripta tests/test.sh ne obstaja." >> napaka.txt
           fi
-
           if [ ! -f tests/test_expected.txt ]; then
             echo "Napaka: output (test_expected.txt) ne obstaja." >> napaka.txt
           fi
-
           if [ ! -f tests/test_input.txt ]; then
             echo "Napaka: input (test_input.txt) ne obstaja." >> napaka.txt
           fi
-        
-      -name: Shrani napako # Uporabi GitHub Actions orodje za shranjevanje datotek
-      uses: actions/upload-artifact@v4
-      with:
-        name: napaka # Ime artefakta
-        path: napaka.txt # Pot do datoteke
 
-  Izvedi_skripte: # izvede teste, če ni bilo napak
-    name: Izvedi skripte
-    needs: preveri_skripte # Ta job se izvede šele, ko se prvi uspešno zaključi
-    
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4 # Ponovno pridobi kodo
-     
-      - name: Prenesi 
-        uses: actions/download-artifact@v4  # Prenese napaka.txt iz prvega joba
+      - name: Shrani napako
+        uses: actions/upload-artifact@v4
         with:
           name: napaka
           path: napaka.txt
-    
+
+  izvedi_skripte:
+    name: Izvedi skripte
+    needs: preveri_skripte
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prenesi napako
+        uses: actions/download-artifact@v4
+        with:
+          name: napaka
+          path: .
+
       - name: Izvedi skripte
         run: |
-         # Če je napaka.txt prazen, to pomeni, da ni napak
           if [ -s napaka.txt ]; then
             cat napaka.txt
-            exit 1  # Zaključi job z napako
+            exit 1
           else
-            chmod +x tests/test.sh  # Dovoli izvajanje skripte
-            ./tests/test.sh  # Zaženi testno skripto
-          fi
+            chmod +x tests/test.sh
+            ./tests/test.sh
