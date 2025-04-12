@@ -20,6 +20,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4  # Klonira repozitorij
 
+      - name: ✅ Preveri DockerHub secrets
+        run: |
+          if [ -z "${{ secrets.DOCKER_USERNAME }}" ]; then 
+            echo " Napaka: Secret DOCKER_USERNAME ni nastavljen."
+            exit 1
+          fi
+          if [ -z "${{ secrets.DOCKER_PASSWORD }}" ]; then 
+            echo "Napaka: Secret DOCKER_PASSWORD ni nastavljen."
+            exit 1
+          fi
+
       - name: Login na DockerHub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin # Prijava v DockerHub
 
