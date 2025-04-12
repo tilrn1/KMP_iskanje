@@ -2,7 +2,7 @@
 
 output=$(./KMP 0 "Lorem ipsum" tests/test_input.txt)
 
-diff -w out.txt tests/text_expected.txt
+diff -w out.txt tests/test_expected.txt
 
 if [ $? -eq 0 ]; then
   echo "Test uspešen"
