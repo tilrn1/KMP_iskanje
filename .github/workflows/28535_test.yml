@@ -7,7 +7,7 @@ on:
 jobs:
   preveri_skripte:  #preveri datoteke obstajajo
     name: Preveri skripte
-    runs-on: ubuntu-latest #Uporabi najnovejšo različico Ubuntu-ja kot virtualno okolje
+    runs-on: ubuntu-latest #Uporabi najnovejšo različico Ubuntu-ja kot virtualno okolje 
         
     steps:
       -name: Checkout
