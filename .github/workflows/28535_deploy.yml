@@ -1,4 +1,4 @@
-name: Na DockerHub b # Ime workflow-a
+name: Na DockerHub # Ime workflow-a
 
 on:
   workflow_run:
@@ -10,8 +10,6 @@ jobs:
   deploy:
     name: Deploy aplikacije # Ime opravila 
     runs-on: self-hosted # Ta job teče na self-hosted runnerju
-    needs: 
-      -izvedi_skripte # Ta job se izvede šele po zaključenem jobu 'izvedi_skripte'
 
     strategy:
       matrix:
