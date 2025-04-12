@@ -1,0 +1,1 @@
+Napaka: input (test_input.txt) ne obstaja.
