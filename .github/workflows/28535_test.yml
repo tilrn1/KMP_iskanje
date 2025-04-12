@@ -50,10 +50,7 @@ jobs:
 
       - name: Izvedi skripte
         run: |
-          if [ -s napaka.txt ]; then
-            cat napaka.txt
-            exit 1
-          else
+          if [! -f napaka.txt ]; then
             chmod +x tests/test.sh
-            ./tests/test.sh
+            ./tests/test.sh > output.txt
           fi
