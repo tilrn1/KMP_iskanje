@@ -1,26 +1,32 @@
-name: Na DockerHub
+name: Na DockerHub b # Ime workflow-a
 
 on:
   workflow_run:
-    workflows: ["28535_test"] # ime prvega workflowa
+    workflows: ["Testiranje projekta"]
     types:
-      - completed
+      - completed # Ta workflow se sproži, ko se zaključi workflow "Testiranje projekta"
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} # preveri, ali je prvi workflow uspešno končan
-    name: Deploy aplikacije
-    runs-on: ubuntu-latest # ali katerikoli drug sistem, ki ga podpira GitHub Actions
+    name: Deploy aplikacije # Ime opravila 
+    runs-on: self-hosted # Ta job teče na self-hosted runnerju
+    needs: 
+      -izvedi_skripte # Ta job se izvede šele po zaključenem jobu 'izvedi_skripte'
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        version: [latest] # Trenutno se uporablja samo 'latest'
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4 # checkout repozitorija
+        uses: actions/checkout@v4  # Klonira repozitorij
 
       - name: Login na DockerHub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin  # prijava na DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin # Prijava v DockerHub
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest . # gradnja Docker slike
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest .   # Ustvari Docker sliko in jo označi  z imenom 'mojprojekt:latest'
 
       - name: Push na DockerHub
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest # potisni sliko na DockerHub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest   # Pošlje zgrajeno Docker sliko na DockerHub pod uporabniškim imenom

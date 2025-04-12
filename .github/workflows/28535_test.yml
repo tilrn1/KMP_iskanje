@@ -2,21 +2,21 @@ name: Testiranje projekta
 
 on:
   push:
-    branches:
-      - main
+    branches: 
+      - main # Se sproži ob vsakem pushu na vejo 'main'
 
 jobs:
-  preveri_skripte:
-    name: Preveri skripte
+  preveri_skripte: # Preveri skripte
+    name: Preveri skripte 
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout 
+        uses: actions/checkout@v4  # Klonira repozitorij
 
       - name: Preveri skripte
-        run: |
-          touch napaka.txt
+        run: |  # Preveri, ali obstajajo zahtevane datoteke. Če katera manjka, se napaka
+          touch napaka.txt  # Ustvari prazno datoteko
           if [ ! -f tests/test.sh ]; then
             echo "Napaka: Testna skripta tests/test.sh ne obstaja." >> napaka.txt
           fi
@@ -30,23 +30,23 @@ jobs:
       - name: Shrani napako
         uses: actions/upload-artifact@v4
         with:
-          name: napaka
-          path: napaka.txt
+          name: napaka # Ime artefakta
+          path: napaka.txt # Pot do datoteke
 
   izvedi_skripte:
-    name: Izvedi skripte
-    needs: preveri_skripte
+    name: Izvedi skripte  # Druga naloga, ki se zažene šele
+    needs: preveri_skripte # Odvisna je od prve naloge
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  # Ponovno klonira repozitorij
 
       - name: Prenesi napako
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4 # Prenese napaka.txt
         with:
           name: napaka
-          path: .
+          path: . # Shrani ga v trenutno mapo
 
       - name: Izvedi skripte
         run: |
