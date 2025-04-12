@@ -2,7 +2,7 @@ name: Testiranje projekta  # Ime ki se bo prikazovalo v GitHub Actions
 on:
   push:
     branches: 
-      - main  #se sproži ob vsakem pushu na vejo 'main'
+      - main  #se sproži ob vsakem pushu na vejo 'main' 
 
 jobs:
   preveri_skripte:  #preveri datoteke obstajajo
@@ -11,11 +11,11 @@ jobs:
         
     steps:
       -name: Checkout
-      uses: actions/checkout@v4 # Potegne kodo iz repozitorija
+      uses: actions/checkout@v4 # Potegne kodo iz repozitorija 
       
       -name: Preveri skripte
       run: |  # Začni z Bash skripto, Preveri ali obstajajo potrebne datoteke
-          touch napaka.txt  # Ustvari prazno datoteko 
+          touch napaka.txt  # Ustvari prazno datoteko #
 
           if [ ! -f tests/test.sh ]; then                                     
             echo "Napaka: Testna skripta tests/test.sh ne obstaja." >> napaka.txt
