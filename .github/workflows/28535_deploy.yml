@@ -1,31 +1,26 @@
 name: Na DockerHub
 
-
 on:
-  workflow_run: # Triggered by another workflow
-    workflows: ["Testiranje aplikacije"] # workflow to trigger tega
+  workflow_run:
+    workflows: ["28535_test"] # ime prvega workflowa
     types:
       - completed
 
 jobs:
   deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # preveri, ali je prvi workflow uspešno končan
     name: Deploy aplikacije
-    runs-on: self-hosted
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        version: [latest]
+    runs-on: ubuntu-latest # ali katerikoli drug sistem, ki ga podpira GitHub Actions
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # checkout repozitorija
 
       - name: Login na DockerHub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin  # prijava na DockerHub
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest . # gradnja Docker slike
 
       - name: Push na DockerHub
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest # potisni sliko na DockerHub
