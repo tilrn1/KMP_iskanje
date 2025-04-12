@@ -14,29 +14,17 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        version: [latest]
+        version: [latest] # Trenutno se uporablja samo 'latest'
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4  # Klonira repozitorij
 
-      - name: Preveri, če so DockerHub secrets nastavljeni
-        run: |
-          if [ -z "${{ secrets.DOCKER_USERNAME }}" ]; then 
-            echo "Napaka: Secret DOCKER_USERNAME ni nastavljen."
-            exit 1
-          fi
-          if [ -z "${{ secrets.DOCKER_PASSWORD }}" ]; then 
-            echo "Napaka: Secret DOCKER_PASSWORD ni nastavljen."
-            exit 1
-          fi
-
-      - name: Prijava na DockerHub
-        run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: Login na DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin # Prijava v DockerHub
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest .   # Ustvari Docker sliko in jo označi  z imenom 'mojprojekt:latest'
 
       - name: Push na DockerHub
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/mojprojekt:latest   # Pošlje zgrajeno Docker sliko na DockerHub pod uporabniškim imenom
