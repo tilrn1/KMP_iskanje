@@ -5,10 +5,12 @@ on:
     workflows: ["Testiranje projekta"]
     types:
       - completed # Ta workflow se sproži, ko se zaključi workflow "Testiranje projekta"
+    
 
 jobs:
   deploy:
     name: Deploy aplikacije # Ime opravila 
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # Zaženi samo če je workflow uspešen
     runs-on: self-hosted # Ta job teče na self-hosted runnerju
 
     strategy:
@@ -22,11 +24,15 @@ jobs:
 
       - name: Priprava okolja
         run: |  # Pripravi okolje
+          echo "1"
           sudo apt-get update
-          sudo apt-get install -y docker.io # Namesti Docker  
-          sudo systemctl start docker # Zažene Docker
-          sudo systemctl enable docker # Omogoči Docker, da se zažene ob zagonu sistema
-          sudo usermod -aG docker $USER # Doda uporabnika v Docker skupino
+          echo "2"
+          sudo apt-get install -y docker.io
+          echo "3"
+          sudo systemctl start docker
+          echo "4"
+          sudo systemctl enable docker# Omogoči Docker, da se zažene ob zagonu sistema
+          echo "5"
 
       - name: Login na DockerHub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin # Prijava v DockerHub
