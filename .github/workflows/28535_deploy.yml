@@ -23,12 +23,12 @@ jobs:
 
       - name: Set up Docker
         run: |
-          if ! command -v docker &> /dev/null
+          if ! command -v docker &> /dev/null # Preveri, če je Docker nameščen
           then
             echo "Docker not found, attempting to install..."
-            apt-get update && apt-get install -y docker.io
-            systemctl start docker
-            systemctl enable docker
+            apt-get update && apt-get install -y docker.io # Namesti Docker
+            systemctl start docker # Zaženi Docker
+            systemctl enable docker # Omogoči Docker, da se zažene ob zagonu sistema
           else
             echo "Docker already installed"
           fi
@@ -39,8 +39,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker buildx create --use || true
-          docker buildx build --platform linux/amd64 -t ${{ secrets.DOCKER_USERNAME }}/KMP:${{ matrix.version }} --load . # Zgradi Docker sliko
-        
+          sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/KMP:${{ matrix.version }} . # Zgradi Docker sliko 
+
       - name: Push na DockerHub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/KMP:${{ matrix.version }}  # Pošlje zgrajeno Docker sliko na DockerHub pod uporabniškim imenom
