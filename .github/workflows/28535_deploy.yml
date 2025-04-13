@@ -24,10 +24,11 @@ jobs:
 
       - name: Set up Docker
         run : |
-          sudo apt-get update  -y # Pridobi najnovejše pakete
-          sudo apt-get install -y docker.io # Namesti Docker
-          sudo systemctl start docker # Zaženi Docker
-          sudo systemctl enable docker # Omogoči Docker, da se zažene ob zagonu sistema
+          apt-get update  -y # Pridobi najnovejše pakete
+          apt-get install -y docker.io # Namesti Docker
+          systemctl start docker # Zaženi Docker
+          systemctl enable docker # Omogoči Docker, da se zažene ob zagonu sistema
+        shell: bash
 
       - name: Login na DockerHub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin # Prijava v DockerHub
