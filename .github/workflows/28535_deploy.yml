@@ -2,33 +2,39 @@ name: Na DockerHub # Ime workflow-a
 
 on:
   workflow_run:
-    workflows: ["Testiranje projekta"]
+    workflows: ["Testiranje projekta"] # Ime workflow-a, ki ga spremlja
     types:
       - completed # Ta workflow se sproži, ko se zaključi workflow "Testiranje projekta"
     
-
 jobs:
   deploy:
     name: Deploy aplikacije # Ime opravila 
     if: ${{ github.event.workflow_run.conclusion == 'success' }} # Zaženi samo če je workflow uspešen
     runs-on: self-hosted # Ta job teče na self-hosted runnerju
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+    strategy: # Definiraj strategijo
+      matrix: # Definiraj matriko
+        os: [ubuntu-latest] # Trenutno se uporablja samo 'ubuntu-latest'
         version: [latest] # Trenutno se uporablja samo 'latest'
 
     steps:
       - name: Checkout
+        need: deploy # Ta job potrebuje prejšnji job
         uses: actions/checkout@v4  # Klonira repozitorij
 
       - name: Set up Docker
-        run : |
-          sudo apt install -y docker.io # Namesti Docker
-          sudo systemctl start docker # Zaženi Docker
-          sudo systemctl enable docker # Omogoči Docker, da se zažene ob zagonu sistema
+        run: |
+          if ! command -v docker &> /dev/null
+          then
+            echo "Docker not found, attempting to install..."
+            apt-get update && apt-get install -y docker.io
+            systemctl start docker
+            systemctl enable docker
+          else
+            echo "Docker already installed"
+          fi
         shell: bash
-
+        
       - name: Login na DockerHub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin # Prijava v DockerHub
 
