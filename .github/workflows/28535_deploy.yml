@@ -23,7 +23,11 @@ jobs:
         uses: actions/checkout@v4  # Klonira repozitorij
 
       - name: Set up Docker
-        uses: docker/setup-docker@v2 # Nastavi Docker
+        run : |
+          sudo apt-get update  -y # Pridobi najnovejše pakete
+          sudo apt-get install -y docker.io # Namesti Docker
+          sudo systemctl start docker # Zaženi Docker
+          sudo systemctl enable docker # Omogoči Docker, da se zažene ob zagonu sistema
 
       - name: Login na DockerHub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin # Prijava v DockerHub
