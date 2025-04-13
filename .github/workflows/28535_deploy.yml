@@ -19,7 +19,6 @@ jobs:
 
     steps:
       - name: Checkout
-        need: deploy # Ta job potrebuje prejšnji job
         uses: actions/checkout@v4  # Klonira repozitorij
 
       - name: Set up Docker
@@ -34,7 +33,7 @@ jobs:
             echo "Docker already installed"
           fi
         shell: bash
-        
+
       - name: Login na DockerHub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin # Prijava v DockerHub
 
