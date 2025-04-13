@@ -39,8 +39,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          mv dockerfile Dockerfile
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/KMP:${{ matrix.version }} -f Dockerfile . # Zgradi Docker sliko
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/KMP:${{ matrix.version }} -f dockerfile .
 
       - name: Push na DockerHub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/KMP:${{ matrix.version }}  # Pošlje zgrajeno Docker sliko na DockerHub pod uporabniškim imenom
