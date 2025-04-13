@@ -24,8 +24,7 @@ jobs:
 
       - name: Set up Docker
         run : |
-          sudo apt-get update  -y # Pridobi najnovejše pakete
-          sudo apt-get install -y docker.io # Namesti Docker
+          sudo apt install -y docker.io # Namesti Docker
           sudo systemctl start docker # Zaženi Docker
           sudo systemctl enable docker # Omogoči Docker, da se zažene ob zagonu sistema
         shell: bash
